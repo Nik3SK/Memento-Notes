@@ -1,6 +1,6 @@
 from fastapi.testclient import TestClient
 
-from app.main import app
+from app.main import app, settings
 
 
 def test_version_returns_app_metadata() -> None:
@@ -9,5 +9,7 @@ def test_version_returns_app_metadata() -> None:
     response = client.get("/version")
 
     assert response.status_code == 200
-    assert response.json()["app_name"] == "Memento Notes API"
-    assert response.json()["version"] == "0.2.0"
+    assert response.json() == {
+        "app_name": settings.app_name,
+        "version": settings.app_version,
+    }

@@ -13,6 +13,7 @@ class Settings:
     app_name: str = "Memento Notes API"
     app_version: str = "0.2.0"
     log_level: str = "INFO"
+    storage_dir: str = "data"
 
 
 def load_settings(env_file: str | Path | None = None) -> Settings:
@@ -26,4 +27,5 @@ def load_settings(env_file: str | Path | None = None) -> Settings:
         app_name=get_value("MEMENTO_APP_NAME", Settings.app_name),
         app_version=get_value("MEMENTO_APP_VERSION", Settings.app_version),
         log_level=get_value("MEMENTO_LOG_LEVEL", Settings.log_level),
+        storage_dir=get_value("MEMENTO_STORAGE_DIR", Settings.storage_dir),
     )

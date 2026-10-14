@@ -31,6 +31,7 @@ cp .env.example .env
 - `MEMENTO_APP_NAME` - название API
 - `MEMENTO_APP_VERSION` - версия приложения
 - `MEMENTO_LOG_LEVEL` - уровень логирования
+- `MEMENTO_STORAGE_DIR` - директория для локального JSON-хранилища заметок
 
 ## Запуск API
 

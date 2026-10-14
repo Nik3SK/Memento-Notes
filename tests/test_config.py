@@ -9,6 +9,7 @@ def test_load_settings_reads_env_file(tmp_path, monkeypatch) -> None:
                 "MEMENTO_APP_NAME=Test Notes",
                 "MEMENTO_APP_VERSION=9.9.9",
                 "MEMENTO_LOG_LEVEL=DEBUG",
+                "MEMENTO_STORAGE_DIR=/tmp/memento-test-notes",
             ]
         ),
         encoding="utf-8",
@@ -17,12 +18,14 @@ def test_load_settings_reads_env_file(tmp_path, monkeypatch) -> None:
     monkeypatch.delenv("MEMENTO_APP_NAME", raising=False)
     monkeypatch.delenv("MEMENTO_APP_VERSION", raising=False)
     monkeypatch.delenv("MEMENTO_LOG_LEVEL", raising=False)
+    monkeypatch.delenv("MEMENTO_STORAGE_DIR", raising=False)
 
     settings = load_settings(env_file)
 
     assert settings.app_name == "Test Notes"
     assert settings.app_version == "9.9.9"
     assert settings.log_level == "DEBUG"
+    assert settings.storage_dir == "/tmp/memento-test-notes"
 
 
 def test_environment_variables_override_env_file(tmp_path, monkeypatch) -> None:
