@@ -18,6 +18,20 @@ uv venv
 uv pip install -r requirements.txt
 ```
 
+Создайте локальный файл конфигурации:
+
+```bash
+cp .env.example .env
+```
+
+Файл `.env` не попадает в git. В репозитории хранится только `.env.example`.
+
+Доступные настройки:
+
+- `MEMENTO_APP_NAME` - название API
+- `MEMENTO_APP_VERSION` - версия приложения
+- `MEMENTO_LOG_LEVEL` - уровень логирования
+
 ## Запуск API
 
 ```bash
@@ -28,6 +42,12 @@ uv run uvicorn app.main:app --reload
 
 ```bash
 curl http://127.0.0.1:8000/health
+```
+
+Версия приложения:
+
+```bash
+curl http://127.0.0.1:8000/version
 ```
 
 ## Запуск UI
