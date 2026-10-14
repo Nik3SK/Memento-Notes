@@ -32,6 +32,7 @@ cp .env.example .env
 - `MEMENTO_APP_VERSION` - версия приложения
 - `MEMENTO_LOG_LEVEL` - уровень логирования
 - `MEMENTO_STORAGE_DIR` - директория для локального JSON-хранилища заметок
+- `MEMENTO_API_BASE_URL` - адрес FastAPI для Streamlit-интерфейса
 
 ## Запуск API
 
@@ -63,6 +64,8 @@ curl http://127.0.0.1:8000/version
 - `GET /tags` - получить список тегов
 
 ## Запуск UI
+
+Streamlit-интерфейс работает как клиент к FastAPI. Сначала запустите API, затем в отдельном терминале запустите UI:
 
 ```bash
 uv run streamlit run ui/main.py

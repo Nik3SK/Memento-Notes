@@ -14,6 +14,7 @@ class Settings:
     app_version: str = "0.2.0"
     log_level: str = "INFO"
     storage_dir: str = "data"
+    api_base_url: str = "http://127.0.0.1:8000"
 
 
 def load_settings(env_file: str | Path | None = None) -> Settings:
@@ -28,4 +29,5 @@ def load_settings(env_file: str | Path | None = None) -> Settings:
         app_version=get_value("MEMENTO_APP_VERSION", Settings.app_version),
         log_level=get_value("MEMENTO_LOG_LEVEL", Settings.log_level),
         storage_dir=get_value("MEMENTO_STORAGE_DIR", Settings.storage_dir),
+        api_base_url=get_value("MEMENTO_API_BASE_URL", Settings.api_base_url),
     )
