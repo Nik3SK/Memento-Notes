@@ -23,9 +23,35 @@ class NoteStore:
         if not self.notes_file.exists():
             self._write_notes([])
 
-    def list_notes(self) -> list[Note]:
+    def list_notes(self, tag: str | None = None) -> list[Note]:
         notes = self._read_notes()
+        if tag:
+            normalized_tag = self._normalize_tag(tag)
+            notes = [note for note in notes if normalized_tag in note.tags]
         return sorted(notes, key=lambda note: note.updated_at, reverse=True)
+
+    def search_notes(self, query: str) -> list[Note]:
+        normalized_query = query.strip().lower()
+        if not normalized_query:
+            return self.list_notes()
+
+        matching_notes = [
+            note
+            for note in self._read_notes()
+            if normalized_query in note.title.lower()
+            or normalized_query in note.content.lower()
+            or any(normalized_query in tag for tag in note.tags)
+        ]
+        logger.info(
+            "Search for '%s' returned %s notes",
+            normalized_query,
+            len(matching_notes),
+        )
+        return sorted(matching_notes, key=lambda note: note.updated_at, reverse=True)
+
+    def list_tags(self) -> list[str]:
+        tags = {tag for note in self._read_notes() for tag in note.tags}
+        return sorted(tags)
 
     def get_note(self, note_id: str) -> Note:
         for note in self._read_notes():
@@ -105,5 +131,9 @@ class NoteStore:
 
     @staticmethod
     def _normalize_tags(tags: list[str]) -> list[str]:
-        normalized_tags = {tag.strip().lower() for tag in tags if tag.strip()}
+        normalized_tags = {NoteStore._normalize_tag(tag) for tag in tags if tag.strip()}
         return sorted(normalized_tags)
+
+    @staticmethod
+    def _normalize_tag(tag: str) -> str:
+        return tag.strip().lower()

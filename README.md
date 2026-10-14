@@ -55,9 +55,12 @@ curl http://127.0.0.1:8000/version
 
 - `POST /notes` - создать заметку
 - `GET /notes` - получить список заметок
+- `GET /notes?tag={tag}` - отфильтровать заметки по тегу
+- `GET /notes/search?q={query}` - найти заметки по заголовку, тексту или тегам
 - `GET /notes/{note_id}` - получить заметку
 - `PUT /notes/{note_id}` - обновить заметку
 - `DELETE /notes/{note_id}` - удалить заметку
+- `GET /tags` - получить список тегов
 
 ## Запуск UI
 

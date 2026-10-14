@@ -3,7 +3,7 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from dataclasses import asdict
 
-from fastapi import Depends, FastAPI, HTTPException, Response, status
+from fastapi import Depends, FastAPI, HTTPException, Query, Response, status
 
 from app.config import load_settings
 from app.schemas import NoteCreate, NoteResponse, NoteUpdate
@@ -72,10 +72,30 @@ async def create_note(
 
 
 @app.get("/notes", response_model=list[NoteResponse])
-async def list_notes(store: NoteStore = Depends(get_note_store)) -> list[NoteResponse]:
-    notes = store.list_notes()
+async def list_notes(
+    tag: str | None = None,
+    store: NoteStore = Depends(get_note_store),
+) -> list[NoteResponse]:
+    notes = store.list_notes(tag=tag)
     logger.info("List notes request completed with %s notes", len(notes))
     return [NoteResponse(**asdict(note)) for note in notes]
+
+
+@app.get("/notes/search", response_model=list[NoteResponse])
+async def search_notes(
+    q: str = Query(default="", description="Search query"),
+    store: NoteStore = Depends(get_note_store),
+) -> list[NoteResponse]:
+    notes = store.search_notes(q)
+    logger.info("Search notes request completed with %s notes", len(notes))
+    return [NoteResponse(**asdict(note)) for note in notes]
+
+
+@app.get("/tags", response_model=list[str])
+async def list_tags(store: NoteStore = Depends(get_note_store)) -> list[str]:
+    tags = store.list_tags()
+    logger.info("List tags request completed with %s tags", len(tags))
+    return tags
 
 
 @app.get("/notes/{note_id}", response_model=NoteResponse)

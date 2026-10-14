@@ -40,6 +40,40 @@ def test_list_notes_returns_newest_updated_first(tmp_path) -> None:
     assert [note.id for note in notes] == [second_note.id, first_note.id]
 
 
+def test_list_notes_can_filter_by_tag(tmp_path) -> None:
+    store = NoteStore(tmp_path)
+    python_note = store.create_note("Python", "Content", ["Python"])
+    store.create_note("Other", "Content", ["work"])
+
+    notes = store.list_notes(tag="PYTHON")
+
+    assert [note.id for note in notes] == [python_note.id]
+
+
+def test_search_notes_matches_title_content_and_tags(tmp_path) -> None:
+    store = NoteStore(tmp_path)
+    title_match = store.create_note("FastAPI ideas", "Content", ["work"])
+    content_match = store.create_note("Daily note", "Read about local storage", [])
+    tag_match = store.create_note("Todo", "Content", ["streamlit"])
+    store.create_note("Other", "Unrelated", ["archive"])
+
+    title_results = store.search_notes("fastapi")
+    content_results = store.search_notes("storage")
+    tag_results = store.search_notes("stream")
+
+    assert [note.id for note in title_results] == [title_match.id]
+    assert [note.id for note in content_results] == [content_match.id]
+    assert [note.id for note in tag_results] == [tag_match.id]
+
+
+def test_list_tags_returns_unique_sorted_tags(tmp_path) -> None:
+    store = NoteStore(tmp_path)
+    store.create_note("First", "Content", ["Work", "python"])
+    store.create_note("Second", "Content", ["python", "ideas"])
+
+    assert store.list_tags() == ["ideas", "python", "work"]
+
+
 def test_update_note_preserves_created_at(tmp_path) -> None:
     store = NoteStore(tmp_path)
     note = store.create_note("Draft", "Initial content", ["draft"])

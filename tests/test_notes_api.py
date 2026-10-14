@@ -47,6 +47,45 @@ def test_list_notes(client: TestClient) -> None:
     ]
 
 
+def test_list_notes_can_filter_by_tag(client: TestClient) -> None:
+    python_note = client.post(
+        "/notes",
+        json={"title": "Python", "tags": ["python"]},
+    ).json()
+    client.post("/notes", json={"title": "Work", "tags": ["work"]})
+
+    response = client.get("/notes", params={"tag": "PYTHON"})
+
+    assert response.status_code == 200
+    assert [note["id"] for note in response.json()] == [python_note["id"]]
+
+
+def test_search_notes(client: TestClient) -> None:
+    client.post(
+        "/notes",
+        json={"title": "FastAPI plan", "content": "Backend tasks"},
+    )
+    streamlit_note = client.post(
+        "/notes",
+        json={"title": "UI", "content": "Build screens", "tags": ["streamlit"]},
+    ).json()
+
+    response = client.get("/notes/search", params={"q": "stream"})
+
+    assert response.status_code == 200
+    assert [note["id"] for note in response.json()] == [streamlit_note["id"]]
+
+
+def test_list_tags(client: TestClient) -> None:
+    client.post("/notes", json={"title": "First", "tags": ["Work", "python"]})
+    client.post("/notes", json={"title": "Second", "tags": ["python", "ideas"]})
+
+    response = client.get("/tags")
+
+    assert response.status_code == 200
+    assert response.json() == ["ideas", "python", "work"]
+
+
 def test_get_note_by_id(client: TestClient) -> None:
     created_note = client.post(
         "/notes",
