@@ -51,6 +51,14 @@ curl http://127.0.0.1:8000/health
 curl http://127.0.0.1:8000/version
 ```
 
+Основные маршруты заметок:
+
+- `POST /notes` - создать заметку
+- `GET /notes` - получить список заметок
+- `GET /notes/{note_id}` - получить заметку
+- `PUT /notes/{note_id}` - обновить заметку
+- `DELETE /notes/{note_id}` - удалить заметку
+
 ## Запуск UI
 
 ```bash
