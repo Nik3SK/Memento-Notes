@@ -76,3 +76,9 @@ uv run streamlit run ui/main.py
 ```bash
 uv run pytest
 ```
+
+## CI
+
+GitHub Actions запускает тесты при `push` и `pull_request`.
+
+После успешных тестов workflow создает artifact `memento-notes-app` с файлами приложения.
